@@ -2,6 +2,13 @@ package main
 
 import "fmt"
 
+type Celsius float64
+type Fahrenheit float64
+
+func (c Celsius) ToFahrenheit() Fahrenheit {
+	return Fahrenheit((c * 1.8) + 32)
+}
+
 func main() {
 
 	// Questions when learning a language:
@@ -16,6 +23,7 @@ func main() {
 	fmt.Printf("%T\n", 1+2)
 	fmt.Printf("%T\n", true)
 	fmt.Println("A string" + " and another string")
+	fmt.Println(`a "quote" like this.`)
 
 	arr := [2]string{"Emily Dickinson", "Fyodor Dostoevsky"}
 	fmt.Println(arr)
@@ -23,6 +31,7 @@ func main() {
 	sli := []string{"Emily Dickinson", "Fyodor Dostoevsky"}
 	sli = append(sli, "Jane Austen")
 	fmt.Println(sli)
+	fmt.Printf("%T\n", sli)
 
 	for _, author := range sli {
 		fmt.Printf("One of my favourite authors is: %s\n", author)
@@ -41,7 +50,7 @@ func main() {
 	// Custom type + Method (see Celsius example)
 
 	age := 18
-	if age > 18 {
+	if age >= 18 {
 		fmt.Println("Can vote!")
 	} else {
 		fmt.Println("Too young!")
@@ -62,18 +71,7 @@ func main() {
 	me := Person{Age: 34, Name: "Nic"}
 	fmt.Println(me)
 
-	// Scope is block scope
-	// And also package scope using Capitalisation.
-	// That's it!
-
-	// Task! Create a map of a few of your favourite authors and books and iterate over it to print them out
-	// Task! Capitalise a string. Nb. I want you to do this using the 'unicode.ToUpper' function.
-	// Task! write fizzbuzz in Go. (https://en.wikipedia.org/wiki/Fizz_buzz)
-}
-
-type Celsius float64
-type Fahrenheit = float64
-
-func (c Celsius) ToFahrenheit() Fahrenheit {
-	return Fahrenheit((c * 1.8) + 32)
+	c := Celsius(100)
+	//ToFahrenheit(c)
+	c.ToFahrenheit()
 }
