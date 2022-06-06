@@ -57,7 +57,7 @@ func TestFind(t *testing.T) {
 	}
 
 	for _, example := range examples {
-		if got := Find(example.items, example.pred); got != example.want {
+		if got, _ := Find(example.items, example.pred); got != example.want {
 			t.Errorf("got %s, want %s", got, example.want)
 		}
 	}

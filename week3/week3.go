@@ -21,12 +21,13 @@ func FizzBuzz(w io.Writer, upto int) {
 }
 
 // Find returns the first element in items that satisfies a predicate function
-// 'p'.
+// 'p'. bool is set to true if an element is found, or false if not.
 //
 // Hints: for/range is your friend here. You can use `var t T` to initialise the
 // unknown type to its 'zero value'.
-func Find[T any](items []T, p func(T) bool) T {
-	return items[0] // FIXME
+func Find[T any](items []T, p func(T) bool) (T, bool) {
+	var t T
+	return t, false // FIXME
 }
 
 type Item struct {
