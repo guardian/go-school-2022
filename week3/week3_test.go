@@ -17,12 +17,11 @@ import (
 func TestFizzBuzz(t *testing.T) {
 	buf := &bytes.Buffer{}
 
-	FizzBuzz(buf, 10)
+	FizzBuzz(buf, 16)
 
 	got, _ := io.ReadAll(buf)
 
-	want := `0
-1
+	want := `1
 2
 Fizz
 4
@@ -36,7 +35,8 @@ Buzz
 Fizz
 13
 14
-Fizz Buzz`
+Fizz Buzz
+`
 
 	if string(got) != want {
 		t.Error(cmp.Diff(string(got), want))
@@ -57,7 +57,7 @@ func TestFind(t *testing.T) {
 	}
 
 	for _, example := range examples {
-		if got := Find(example.items, example.pred); got != example.want {
+		if got, _ := Find(example.items, example.pred); got != example.want {
 			t.Errorf("got %s, want %s", got, example.want)
 		}
 	}
