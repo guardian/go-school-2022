@@ -17,12 +17,11 @@ import (
 func TestFizzBuzz(t *testing.T) {
 	buf := &bytes.Buffer{}
 
-	FizzBuzz(buf, 10)
+	FizzBuzz(buf, 15)
 
 	got, _ := io.ReadAll(buf)
 
-	want := `0
-1
+	want := `1
 2
 Fizz
 4
@@ -36,7 +35,8 @@ Buzz
 Fizz
 13
 14
-Fizz Buzz`
+Fizz Buzz
+`
 
 	if string(got) != want {
 		t.Error(cmp.Diff(string(got), want))
@@ -61,6 +61,9 @@ func TestFind(t *testing.T) {
 			t.Errorf("got %s, want %s", got, example.want)
 		}
 	}
+
+	a := Find([]string{"foo", "bar"}, func(s string) bool { return s == "bar" })    // compile error - 'cannot initialise 1 variables with 2 values'
+	a, b := Find([]string{"foo", "bar"}, func(s string) bool { return s == "bar" }) // compile error - 'b is declared but not used'
 }
 
 func TestGetNews(t *testing.T) {
