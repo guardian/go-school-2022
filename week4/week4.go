@@ -38,7 +38,7 @@ func main() {
 	case 4:
 		launch()
 	case 5:
-		buferring()
+		buffering()
 	case 6:
 		top10Timeouts()
 	default:
@@ -119,7 +119,7 @@ func launch() {
 
 // What does this do?
 // Why might buffering useful?
-func buferring() {
+func buffering() {
 	ch := make(chan int, 1) // channel can only have one item at a time
 
 	for i := 0; i < 10; i++ {
