@@ -8,15 +8,39 @@ import (
 
 // FanIn should merge channels into a single read-only channel.
 func FanIn[T any](chs ...chan T) <-chan T {
-	ch := make(chan T)
-	return ch
+	chanOut := make(chan T)
+	for _, chanIn := range chs {
+		go func(in chan T) {
+		for item := range in {
+			chanOut <- item	
+		}
+		}(chanIn)
+	}
+	return chanOut
 }
 
 // Throttle should return a function that, however often called, executes no
 // more than once per wait time.
 // Hint: lock := make(chan bool, 1) can be used as a semaphore here.
 func Throttle[A, B any](fn func(), tick chan B) func() {
-	return func() {}
+	lock := make(chan bool, 1)
+	lock <- false
+
+	go func () {
+		for range tick {
+			// Unlock
+			lock <- false
+		}
+	}()
+
+	return func() {
+		select {
+		case <-lock:
+			fn()
+		default:
+			// Do nothing
+		}
+	}
 }
 
 // Cancellable wraps a function to provide cancellation (via a context). Note,
@@ -38,10 +62,21 @@ type Result struct {
 	Error    error
 }
 
+func getResult(u url.URL, ch chan Result) {
+	resp, err := http.Get(u.RawPath)
+	result := Result { Response: *resp, Error: err }
+	ch <- result
+}
+
 // GetQuickest should fetch each target/mirror in parallel and return a channel
 // with the fastest response only or an error if all fail.
 func GetQuickest(target1 url.URL, mirror1 url.URL, mirror2 url.URL) <-chan Result {
 	ch := make(chan Result, 1)
+
+	go getResult(target1, ch)
+	go getResult(mirror1, ch)
+	go getResult(mirror2, ch)
+	
 	return ch
 }
 
