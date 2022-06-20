@@ -10,6 +10,8 @@ import (
 	"reflect"
 	"testing"
 	"time"
+
+	"golang.org/x/exp/slices"
 )
 
 func TestFanIn(t *testing.T) {
@@ -36,6 +38,7 @@ func TestFanIn(t *testing.T) {
 		got = append(got, item)
 	}
 
+	slices.Sort(got)
 	want := []int{0, 1, 2}
 
 	if !reflect.DeepEqual(got, want) {
@@ -45,10 +48,10 @@ func TestFanIn(t *testing.T) {
 
 func TestThrottle(t *testing.T) {
 	i := 0
-	fn := func() int { i++; return i }
+	fn := func() { i++ }
 	tick := make(chan bool, 1)
 
-	fnThrottled := Throttle(fn, tick)
+	fnThrottled := Throttle[int](fn, tick)
 
 	fnThrottled()
 	fnThrottled() // should be collapsed
@@ -57,7 +60,8 @@ func TestThrottle(t *testing.T) {
 		t.Errorf("fnThrottled should have run once; got %d", i)
 	}
 
-	tick <- true // move things along
+	tick <- true                       // move things along
+	time.Sleep(time.Millisecond * 100) // Ugly - how can we improve this?
 	fnThrottled()
 
 	if i != 2 {
